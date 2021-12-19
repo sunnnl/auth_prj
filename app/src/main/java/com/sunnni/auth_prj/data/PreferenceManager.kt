@@ -10,7 +10,7 @@ import androidx.security.crypto.MasterKey
 object PreferenceManager {
 
     private const val AUTH_PREF = "auth_pref"
-    private const val MASTER_KEY_ALIAS = "_androidx_security_master_key"
+    private const val MASTER_KEY_ALIAS = "_androidx_security_master_key_"
     private const val KEY_SIZE = 256
     private const val PREFERENCE_FILE_KEY = "_preferences"
 
