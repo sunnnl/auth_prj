@@ -61,8 +61,8 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>({
         return true
     }
 
-    private fun postSignUp(id : String, nickname : String, password : String){
-        val call : Call<String> = ServiceImpl.service.postSignUp(
+    private fun postSignUp(id: String, nickname: String, password: String) {
+        val call: Call<String> = ServiceImpl.service.postSignUp(
             User(
                 id,
                 nickname,
@@ -76,9 +76,11 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>({
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
-                            // TODO : 성공
-                            // TODO : 로그인 페이지로 돌아가기
-                            Log.d(TAG, response.body().toString())
+                            Toast.makeText(
+                                this@SignupActivity,
+                                getText(R.string.txt_done_signup),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             finish()
                         }
                     } else {
