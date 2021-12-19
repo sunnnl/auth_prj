@@ -1,4 +1,4 @@
-package com.sunnni.auth_prj
+package com.sunnni.auth_prj.ui
 
 import android.content.Intent
 import android.os.Bundle

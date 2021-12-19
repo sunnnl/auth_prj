@@ -1,4 +1,4 @@
-package com.sunnni.auth_prj
+package com.sunnni.auth_prj.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import com.sunnni.auth_prj.R
 import com.sunnni.auth_prj.api.ServiceImpl
 import com.sunnni.auth_prj.data.PreferenceManager
 import com.sunnni.auth_prj.data.dto.User

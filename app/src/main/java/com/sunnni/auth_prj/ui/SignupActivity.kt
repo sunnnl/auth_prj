@@ -1,9 +1,10 @@
-package com.sunnni.auth_prj
+package com.sunnni.auth_prj.ui
 
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import com.sunnni.auth_prj.R
 import com.sunnni.auth_prj.api.ServiceImpl
 import com.sunnni.auth_prj.data.dto.User
 import com.sunnni.auth_prj.databinding.ActivitySignupBinding
