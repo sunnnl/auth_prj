@@ -5,7 +5,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import com.sunnni.auth_prj.api.ServiceImpl
-import com.sunnni.auth_prj.data.dto.Register
+import com.sunnni.auth_prj.data.dto.User
 import com.sunnni.auth_prj.databinding.ActivitySignupBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,10 +63,11 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>({
 
     private fun postSignUp(id : String, nickname : String, password : String){
         val call : Call<String> = ServiceImpl.service.postSignUp(
-            Register(
+            User(
                 id,
                 nickname,
-                password
+                password,
+                null
             )
         )
 

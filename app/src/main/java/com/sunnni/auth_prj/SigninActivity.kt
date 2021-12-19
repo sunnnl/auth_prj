@@ -3,14 +3,23 @@ package com.sunnni.auth_prj
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import com.sunnni.auth_prj.api.ServiceImpl
+import com.sunnni.auth_prj.data.PreferenceManager
+import com.sunnni.auth_prj.data.dto.User
 import com.sunnni.auth_prj.databinding.ActivitySigninBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SigninActivity : BaseActivity<ActivitySigninBinding>({
     ActivitySigninBinding.inflate(it)
 }) {
+
+    private val TAG: String = SigninActivity::class.java.getSimpleName()
 
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -24,11 +33,13 @@ class SigninActivity : BaseActivity<ActivitySigninBinding>({
         setListener()
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.btnLogin.setOnClickListener {
             if (inputValidation()) {
-                // TODO : 로그인
-                finish()
+                val id = binding.edtId.text.toString()
+                val pw = binding.edtPw.text.toString()
+
+                postSignIn(id, pw)
             }
         }
         binding.btnRegister.setOnClickListener {
@@ -37,7 +48,7 @@ class SigninActivity : BaseActivity<ActivitySigninBinding>({
         }
     }
 
-    private fun inputValidation() : Boolean {
+    private fun inputValidation(): Boolean {
         val id = binding.edtId.text.toString()
         val pw = binding.edtPw.text.toString()
         if (TextUtils.isEmpty(id)) {
@@ -48,5 +59,46 @@ class SigninActivity : BaseActivity<ActivitySigninBinding>({
             return false
         }
         return true
+    }
+
+    private fun postSignIn(id: String, password: String) {
+        val call: Call<Void> = ServiceImpl.service.postSignIn(
+            User(
+                id,
+                null,
+                password,
+                null
+            )
+        )
+
+        call.enqueue(
+            object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        if (response.code() == 200) {
+                            // header로 받는 경우
+                            val access_token = response.headers().get("access_token")
+                            val refresh_token = response.headers().get("refresh_token")
+
+                            // body로 받는 경우 -> dto 정의 필요
+                            // val access_token_body = response.body()
+
+                            PreferenceManager.setAccessToken(this@SigninActivity, access_token!!)
+                            PreferenceManager.setRefreshToken(this@SigninActivity, refresh_token!!)
+
+                            startActivity(Intent(this@SigninActivity, MainActivity::class.java))
+
+                            finish()
+                        }
+                    } else {
+                        Log.e(TAG, response.code().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, "error: $t")
+                }
+            }
+        )
     }
 }

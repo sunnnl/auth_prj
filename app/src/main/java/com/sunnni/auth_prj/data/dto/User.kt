@@ -2,11 +2,13 @@ package com.sunnni.auth_prj.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Register (
+data class User(
     @SerializedName("id")
-    var id : String,
+    var id: String,
     @SerializedName("nickname")
-    var nickname : String,
+    var nickname: String?,
     @SerializedName("password")
-    var password : String
+    var password: String?,
+    @SerializedName("type")
+    var type: Byte?
 )

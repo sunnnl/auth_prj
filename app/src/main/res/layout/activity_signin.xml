@@ -46,6 +46,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_editor"
             android:hint="@string/hint_input_password"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="@color/grey_500" />
