@@ -77,7 +77,6 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>({
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
-                            Log.d("sunnnl", "와이라노 ..")
                             Toast.makeText(
                                 this@SignupActivity,
                                 getText(R.string.txt_done_signup),

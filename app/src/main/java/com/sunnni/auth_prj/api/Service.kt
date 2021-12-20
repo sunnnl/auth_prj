@@ -22,4 +22,7 @@ interface Service {
     fun getUserInfo(
         @Header("authorization") accessToken: String
     ) : Call<User>
+
+    @GET("admin/users")
+    fun getUsers() : Call<ArrayList<User>>
 }

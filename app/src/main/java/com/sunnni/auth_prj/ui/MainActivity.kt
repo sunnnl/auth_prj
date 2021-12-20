@@ -30,6 +30,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>({
             startActivity(Intent(this, SigninActivity::class.java))
             finish()
         }
+        binding.tvMenuUserManagement.setOnClickListener {
+            startActivity(Intent(this, ManageUserActivity::class.java))
+        }
     }
 
     // 관리자와 일반 사용자의 화면을 구분하기 위함

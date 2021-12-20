@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Auth_prj"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.ManageUserActivity"></activity>
+        <activity
+            android:name=".ui.ManageUserActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.BaseActivity"
             tools:ignore="Instantiatable" />
