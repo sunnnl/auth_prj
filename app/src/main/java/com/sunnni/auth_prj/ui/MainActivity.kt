@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import com.sunnni.auth_prj.api.ServiceImpl
 import com.sunnni.auth_prj.data.PreferenceManager
+import com.sunnni.auth_prj.data.dto.ResLogin
 import com.sunnni.auth_prj.data.dto.User
 import com.sunnni.auth_prj.databinding.ActivityMainBinding
 import retrofit2.Call
@@ -45,16 +46,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>({
     }
 
     private fun getUserInfo() {
-        val call : Call<User> = ServiceImpl.service.getUserInfo(
+        val call : Call<ResLogin> = ServiceImpl.service.getUserInfo(
             "Bearer " + PreferenceManager.getAccessToken(this@MainActivity)
         )
         call.enqueue(
-            object : Callback<User> {
-                override fun onResponse(call: Call<User>, response: Response<User>) {
+            object : Callback<ResLogin> {
+                override fun onResponse(call: Call<ResLogin>, response: Response<ResLogin>) {
                     if (response.isSuccessful) {
                         if (response.code() == 200) {
-                            var nickname : String = response.body()!!.nickname!!
-                            var type : Byte = response.body()!!.type!!
+                            var nickname : String = response.body()!!.user!!.nickname!!
+                            var type : Byte = response.body()!!.user!!.type!!
                             setView(nickname, type)
                         }
                     } else {
@@ -62,7 +63,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>({
                     }
                 }
 
-                override fun onFailure(call: Call<User>, t: Throwable) {
+                override fun onFailure(call: Call<ResLogin>, t: Throwable) {
                     Log.e(TAG, "error: $t")
                 }
             }

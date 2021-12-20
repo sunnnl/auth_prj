@@ -1,5 +1,7 @@
 package com.sunnni.auth_prj.api
 
+import com.sunnni.auth_prj.data.dto.ResLogin
+import com.sunnni.auth_prj.data.dto.ResRefreshToken
 import com.sunnni.auth_prj.data.dto.User
 import retrofit2.Call
 import retrofit2.http.Body
@@ -11,23 +13,28 @@ interface Service {
     @POST("api/user/")
     fun postSignUp(
         @Body body: User
-    ) : Call<String>
+    ): Call<String>
 
     @POST("api/user/login")
     fun postSignIn(
         @Body body: User
-    ) : Call<Void>
+    ): Call<Void>
 
     @GET("api/user/")
     fun getUserInfo(
         @Header("authorization") accessToken: String
-    ) : Call<User>
+    ): Call<ResLogin>
 
     @GET("api/user/admin/users")
-    fun getUsers() : Call<List<User>>
+    fun getUsers(): Call<List<User>>
 
     @POST("api/user/admin/switchType")
     fun postChangeUserType(
-        @Body body : User
-    ) : Call<Void>
+        @Body body: User
+    ): Call<Void>
+
+    @GET("api/user/refresh")
+    fun getRefresh(
+        @Header("authorization") refreshToken: String
+    ): Call<ResRefreshToken>
 }

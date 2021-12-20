@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import com.sunnni.auth_prj.R
 import com.sunnni.auth_prj.api.ServiceImpl
 import com.sunnni.auth_prj.data.PreferenceManager
+import com.sunnni.auth_prj.data.dto.ResLogin
+import com.sunnni.auth_prj.data.dto.ResRefreshToken
 import com.sunnni.auth_prj.data.dto.User
 import com.sunnni.auth_prj.databinding.ActivitySigninBinding
 import retrofit2.Call
@@ -31,6 +33,7 @@ class SigninActivity : BaseActivity<ActivitySigninBinding>({
             // do something
         }
 
+        checkToken()
         setListener()
     }
 
@@ -46,6 +49,12 @@ class SigninActivity : BaseActivity<ActivitySigninBinding>({
         binding.btnRegister.setOnClickListener {
             resultLauncher!!.launch(Intent(applicationContext, SignupActivity::class.java))
             // TODO : 회원가입 후 돌아오기
+        }
+    }
+
+    private fun checkToken() {
+        if (!PreferenceManager.getAccessToken(this@SigninActivity).isEmpty()) {
+            checkValidAccessToken()
         }
     }
 
@@ -97,6 +106,65 @@ class SigninActivity : BaseActivity<ActivitySigninBinding>({
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, "error: $t")
+                }
+            }
+        )
+    }
+
+    private fun checkValidAccessToken() {
+        Log.d("sunnnl", "in checkValidAccessToken")
+        val call: Call<ResLogin> = ServiceImpl.service.getUserInfo(
+            "Bearer " + PreferenceManager.getAccessToken(this@SigninActivity)
+        )
+        call.enqueue(
+            object : Callback<ResLogin> {
+                override fun onResponse(call: Call<ResLogin>, response: Response<ResLogin>) {
+                    if (response.isSuccessful) {
+                        if (response.body()!!.code == 401) {
+                            if (!PreferenceManager.getRefreshToken(this@SigninActivity).isEmpty()) {
+                                getNewAccessToken()
+                            }
+                        } else {
+                            startActivity(Intent(this@SigninActivity, MainActivity::class.java))
+                            finish()
+                        }
+                    } else {
+                        Log.e(TAG, response.code().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<ResLogin>, t: Throwable) {
+                    Log.e(TAG, "error: $t")
+                }
+            }
+        )
+    }
+
+    private fun getNewAccessToken() {
+        Log.d("sunnnl", "in getNewAccessToken")
+        val call: Call<ResRefreshToken> = ServiceImpl.service.getRefresh(
+            "Bearer " + PreferenceManager.getRefreshToken(this@SigninActivity)
+        )
+        call.enqueue(
+            object : Callback<ResRefreshToken> {
+                override fun onResponse(
+                    call: Call<ResRefreshToken>,
+                    response: Response<ResRefreshToken>
+                ) {
+                    if (response.isSuccessful) {
+                        if (response.body()!!.code == 200) {
+                            val access_token = response.body()!!.token
+                            PreferenceManager.setAccessToken(this@SigninActivity, access_token!!)
+                            startActivity(Intent(this@SigninActivity, MainActivity::class.java))
+                            finish()
+                        }
+                    } else {
+                        Log.e(TAG, response.code().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<ResRefreshToken>, t: Throwable) {
                     Log.e(TAG, "error: $t")
                 }
             }
