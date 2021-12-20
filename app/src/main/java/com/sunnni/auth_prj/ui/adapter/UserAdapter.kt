@@ -4,13 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
+import android.widget.RadioGroup
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sunnni.auth_prj.R
 import com.sunnni.auth_prj.data.dto.User
 
-class UserAdapter(val ctx: Context, val userList: ArrayList<User>) :
+class UserAdapter(val ctx: Context, val userList: ArrayList<User>, val itemListener : CompoundButton.OnCheckedChangeListener) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -20,6 +22,7 @@ class UserAdapter(val ctx: Context, val userList: ArrayList<User>) :
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(userList[position])
+        holder.swcAdmin.setTag(userList[position])
     }
 
     override fun getItemCount(): Int {
@@ -40,6 +43,7 @@ class UserAdapter(val ctx: Context, val userList: ArrayList<User>) :
             if (data.type == admin.toByte()) {
                 swcAdmin.isChecked = true
             }
+            swcAdmin.setOnCheckedChangeListener(itemListener)
         }
     }
 }

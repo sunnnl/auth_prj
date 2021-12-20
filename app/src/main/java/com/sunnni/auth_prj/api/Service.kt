@@ -23,6 +23,11 @@ interface Service {
         @Header("authorization") accessToken: String
     ) : Call<User>
 
-    @GET("admin/users")
-    fun getUsers() : Call<ArrayList<User>>
+    @GET("api/user/admin/users")
+    fun getUsers() : Call<List<User>>
+
+    @POST("api/user/admin/switchType")
+    fun postChangeUserType(
+        @Body body : User
+    ) : Call<Void>
 }
